@@ -28,6 +28,10 @@ const int port = 5005;
 int main(void) {
   Server svr;
   restDB rDB;
+int nextUser=0;
+ map<string,vector<string>> messageMap;
+ map<string,string> userMap;
+ map<string,string> userEmail;
 
 	
   /* "/" just returnsAPI name */
@@ -38,28 +42,36 @@ int main(void) {
 
 	
 //code for registration!!!!!!!
-svr.Get(R"(/chat/register/(.*)/(.*)/(.*))", [&](const Request& req, Response& res) {
-    // Extract the name, email, and password from the request URL
-    res.set_header("Access-Control-Allow-Origin","*");
-    std::string name = req.matches[1];
-    std::string email = req.matches[2];
-    std::string password = req.matches[3];
+ svr.Get(R"(/chat/register/(.*)/(.*)/(.*))", [&](const Request& req, Response& res) {
+	res.set_header("Access-Control-Allow-Origin","*");
+ 	string username = req.matches[1];
+	string email = req.matches[2];
+	string password = req.matches[3];
+	 
+ 	string result;
+ 	vector<string> empty;
 
-    // Check if the username is already taken
-    restDB rDB;
-    vector<restEntry> results = rDB.find(name);
-    if (results.size() > 0) {
-      // Return an error response
-      res.set_content("{\"error\":\"Username already taken\"}", "application/json");
-    } else {
-      // Register the new user
-      rDB.addEntry(name,email,password);
-
-      // Return a success response
-      res.set_content("{\"message\":\"User registered successfully\"}", "application/json");
+ vector<restEntry> entries = rDB.getUserEntries(username);
+bool usernameExists = false;
+for (const auto& entry : entries) {
+    if (entry.user == username) {
+        usernameExists = true;
+        break;
     }
-});
-
+}
+	 
+ if (usernameExists or messageMap.count(username) or messageMap.count(email) or password.length() < 7){
+ result = "{\"status\":\"registrationfailure\"}";
+ } else {
+ messageMap[username]= empty;
+	userEmail[username] = email;
+	restDB rDB;
+	string user=username; string pass=password;
+	rDB.addEntry(user,email,pass);
+	addUser(username , password, email , userMap);
+ result = "{\"status\":\"success\",\"user\":\"" + username + "\",\"email\":\"" + email + "\",\"pass\":\"" + password + "\"}";
+ }
+	
 
 
 
