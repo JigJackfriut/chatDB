@@ -59,6 +59,7 @@ for (const auto& entry : entries) {
         break;
     }
 }
+
 	 
  if (usernameExists or messageMap.count(username) or messageMap.count(email) or password.length() < 7){
  result = "{\"status\":\"registrationfailure\"}";
@@ -68,9 +69,9 @@ for (const auto& entry : entries) {
 	restDB rDB;
 	string user=username; string pass=password;
 	rDB.addEntry(user,email,pass);
-	addUser(username , password, email , userMap);
  result = "{\"status\":\"success\",\"user\":\"" + username + "\",\"email\":\"" + email + "\",\"pass\":\"" + password + "\"}";
  }
+ });
 	
 
 
