@@ -89,7 +89,7 @@ vector<restEntry> restDB::getUserEntries(string username) {
 }
 
 
-void DB::addEntry(string user,string email,string pass){
+void restDB::addEntry(string user,string email,string pass){
 
 	if (!conn) {
    		cerr << "Invalid database connection" << endl;
