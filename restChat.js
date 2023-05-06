@@ -159,49 +159,19 @@ function logout() {
 // Define a function to handle registration form submission
 
 
-   function registerUser() { 
-  // Get the form input values
-  const name = document.getElementById("orangeForm-name").value;
-  const email = document.getElementById("orangeForm-email").value;
-  const password = document.getElementById("orangeForm-pass").value;
-
-  // Validate the input
-  if (!name || !email || !password) {
-    alert("Please fill out all fields");
-    return;
-  } else if (password.length < 6) {
-    alert("Password must be at least 6 characters long");
-    return;
-  } else {
-    myname = name;
-    myemail = email;
-    mypass = password;
-
-    // Send user credentials to server for registration
-    fetch(baseUrl+'/chat/register/'+myname+'/'+myemail+'/'+mypass, {
-      method: 'get'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data.error) {
-        // Registration failed due to duplicate username
-        alert(data.error);
-      } else {
-        // Registration successful
-        alert(data.message);
-        startSession(myname);
-      }
-    })
-    .catch(error => {
-      console.log("Registration failed: " + error.message);
-      alert("Registration failed. Please try again later.");
+function registerUser() {
+	console.log("This function is being called")
+	username = document.getElementById('orangeForm-name').value;
+	email = document.getElementById('orangeForm-email').value;
+	password = document.getElementById('orangeForm-pass').value;
+	fetch(baseUrl+'/chat/register/'+username+'/'+email+'/'+password, {
+		method: 'get'
+	})
+	.then (response => response.json() )
+    	.then (data =>completeRegister(data))
+    	.catch(error => {
+        {alert("Error: Something went wrong:"+error);}
     });
-  }
 }
 
 // Attach the registerUser function to the form submit button
